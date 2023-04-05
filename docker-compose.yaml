@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  postgres-hasura:
+    image: postgres:12
+    # restart: unless-stopped
+    volumes:
+      - ./db_data_main:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 11000:5432
+    env_file:
+      - ./.env
+    # networks:
+    #   - local-network 
+
+  graphql-engine:
+    image: hasura/graphql-engine:v2.12.0
+    depends_on:
+      - "postgres-hasura"
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.env
+    # networks:
+    #   - local-network
+    
+    # restart: unless-stopped
+    environment:
+      ## postgres database to store Hasura metadata
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-hasura:5432/postgres
+      ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
+      PG_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-hasura:5432/postgres
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "false" # set to "false" to disable console
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
+      # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+      # uncomment next line to set an admin secret
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      HASURA_GRAPHQL_JWT_SECRET: '{ "type": "HS256", "key": "c3ce69e1c176b79dd6b5631d829ade01" }'
+
+  # events-server:
+  #   build:
+  #     context: ./packages/events
+  #     target: production-build-stage
+  #     dockerfile: Dockerfile
+  #   container_name: server
+  #   ports:
+  #     - '3333:3000'
+  #   # volumes:
+  #   #   - ./.env.production.local:/app/.env.production.local
+  #   # networks:
+  #   #   - local-network
+
+networks:
+  local-network:
+    driver: bridge

@@ -1,0 +1,14 @@
+{
+  "name": "hasura-server",
+  "version": "1.0.0",
+  "description": "hasura graphql server for model list",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yescine",
+  "license": "ISC",
+  "devDependencies": {
+    "hasura-cli": "2.12.0"
+  }
+}

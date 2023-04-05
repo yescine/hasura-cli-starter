@@ -1,0 +1,5 @@
+# docker related
+db_data_*
+
+node_modules
+.env
