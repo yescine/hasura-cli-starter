@@ -1,0 +1,36 @@
+mutation insertTags {
+  insert_tags(
+    objects: [
+      { id: "1", name: "head" }
+      { id: "2", name: "mouth" }
+      { id: "3", name: "face" }
+      { id: "4", name: "lips" }
+      { id: "5", name: "body" }
+    ]
+  ) {
+    affected_rows
+  }
+}
+
+mutation updateTagRelations {
+  update_tags_by_pk(pk_columns: {id: "3"}, _set: {parent_id: "1", child_id: "2"}) {
+    name
+  }
+}
+
+query getParentChild {
+  tags_by_pk(id: "3") {
+    name
+    parent_id
+    child_id
+    tagByChildId {
+      name
+      id
+    }
+    tagByParentId {
+      name
+      id
+    }
+  }
+}
+
