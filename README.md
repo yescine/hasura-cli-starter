@@ -9,6 +9,9 @@ mv .env.example .env
 npm install | npx i --save-dev hasura-cli
 ```
 
+add postgres connection string relative to docker container 
+`postgresql://<user>:<pass>@postgres-hasura:5432/postgres`
+
 migrate and populate hasura project
 
 lunch hasura in console mode
