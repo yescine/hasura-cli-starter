@@ -1,0 +1,108 @@
+mutation insertInitialData {
+  insert_profile_model(
+    objects: [{ email: "ex1@ex.com", name: "example-1", id: "1" }, { email: "ex2@ex.com", name: "example-2", id: "2" }]
+  ) {
+    affected_rows
+  }
+  insert_file_types(objects: [{ name: "image", id: "1" }, { name: "pdf", id: "2" }, { name: "video", id: "3" }]) {
+    affected_rows
+  }
+}
+
+mutation insertFirstFile {
+  insert_file_references_one(
+    object: {
+      id: "1"
+      profile_id: "1"
+      album: { data: { name: "default", id: "1" } }
+      path: "/img/mana/cover-img.jpg"
+      name: "cover-img.jpg"
+      file_type_id: "1"
+    }
+  ) {
+    profile_model {
+      name
+      id
+      email
+    }
+  }
+}
+
+mutation insertManyFiles {
+  insert_file_references(
+    objects: [
+      { id: "2", profile_id: "1", album_id: "1", path: "/img/mana/cover-img.jpg", name: "cover-img.jpg", file_type_id: "1" }
+      {
+        id: "3"
+        profile_id: "1"
+        album_id: "1"
+        path: "/img/mana/cover-img-Prem-2.jpg"
+        name: "cover-img-Prem-2.jpg"
+        file_type_id: "1"
+      }
+      {
+        id: "4"
+        profile_id: "1"
+        album_id: "1"
+        path: "/img/mana/cover-img-Prem-3.jpg"
+        name: "cover-img-Prem-3.jpg"
+        file_type_id: "1"
+      }
+      {
+        id: "5"
+        profile_id: "1"
+        album_id: "1"
+        path: "/img/mana/cover-img-Prem-4.pdf"
+        name: "cover-img-Prem-4.pdf"
+        file_type_id: "2"
+      }
+    ]
+  ) {
+    affected_rows
+  }
+}
+
+mutation insertPortfolio {
+  insert_portfolios_one(object: { id: "1", name: "main", album_id: "1" }) {
+    name
+    id
+    album_id
+  }
+}
+
+
+query getProfileIdFromAlbums {
+  albums {
+    name
+    file_references {
+      profile_id
+      name
+      path
+      profile_model {
+        email
+        id
+      }
+    }
+  }
+}
+
+
+query getProfileIdFromPortfolio {
+  portfolios_by_pk(id: "1") {
+    name
+    albums(distinct_on: portfolio_id) {
+      name
+      file_references(distinct_on: profile_id) {
+        name
+        path
+        profile_id
+        profile_model {
+          email
+          name
+          id
+        }
+      }
+    }
+  }
+}
+

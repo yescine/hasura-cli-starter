@@ -1,5 +1,1 @@
-- "!include public_products.yaml"
-- "!include public_products_tags.yaml"
-- "!include public_tags.yaml"
-- "!include public_tags_child.yaml"
-- "!include public_tags_parent.yaml"
+[]
