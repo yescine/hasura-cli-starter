@@ -1,0 +1,46 @@
+mutation insertTags {
+  insert_tags(objects: [{ name: "head" }, { name: "mouth" }, { name: "face" }, { name: "lips" }, { name: "body" }]) {
+    affected_rows
+  }
+}
+
+mutation InsertTagRelations{
+  insert_tags_parent_one(object: { tag_id: 3, tag_parent_id: 1 }) {
+    id
+  }
+  insert_tags_parent_one(object: { tag_id: 3, tag_parent_id: 5 }) {
+    id
+  }
+  insert_tags_child_one(object: { tag_id: 3, tag_child_id: 2 }) {
+    id
+  }
+  insert_tags_parent_one(object: { tag_id: 4, tag_parent_id: 2 }) {
+    id
+  }
+}
+
+query getHeiarchyfromTags{
+  tags(where: { id: { _eq: 3 } }) {
+    name
+    id
+    tags_parents {
+      tag_parent_id
+      tagByTagParentId {
+        name
+      }
+    }
+    tags_children {
+      tag_child_id
+      tagByTagChildId {
+        name
+      }
+    }
+  }
+}
+
+query getTagFromHeiarchy {
+  tags_parent(where: {tag: {id: {_eq: 3}}}) {
+    tag_id
+    tag_parent_id
+  }
+}

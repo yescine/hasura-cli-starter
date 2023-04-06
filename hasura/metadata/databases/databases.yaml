@@ -1,1 +1,10 @@
-[]
+- name: main
+  kind: postgres
+  configuration:
+    connection_info:
+      database_url: postgresql://hasura-admin:postgrespassword@postgres-hasura:5432/postgres
+      isolation_level: read-committed
+      use_prepared_statements: false
+  customization:
+    naming_convention: hasura-default
+  tables: "!include main/tables/tables.yaml"
