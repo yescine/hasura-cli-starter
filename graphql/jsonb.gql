@@ -1,0 +1,13 @@
+mutation {
+  insert_users_one(object: {country: 1, email: "email@email.com", id: "u-1", metadata: {name:"yassine",age:30}}) {
+    email
+  }
+}
+
+
+query getUser{
+  users(where: {metadata: {_contains: {age:30}}}) {
+    email
+    metadata
+  }
+}
